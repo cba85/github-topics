@@ -68,7 +68,20 @@ const packageDependencies = Object.keys(json.dependencies);
 
 // Combinate Github repository topics and package.json dependencies
 
-const dependencies = Array.from(new Set([...packageDependencies, ...topics]));
+let dependencies = Array.from(new Set([...packageDependencies, ...topics]));
+
+// Sanitize dependencies
+
+const githubTopicsRegex1 = /[@]+/g;
+const githubTopicsRegex2 = /[\/]+/g;
+
+for (let [index, dependency] of dependencies.entries()) {
+  dependency = dependency.replace(githubTopicsRegex1, "");
+  dependency = dependency.replace(githubTopicsRegex2, "-");
+  dependencies[index] = dependency;
+}
+
+dependencies = Array.from(new Set([...dependencies]));
 
 // Update repository topics on Github
 
